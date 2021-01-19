@@ -1,17 +1,13 @@
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
+#include <DNSServer.h>
 #include <ESP8266WebServer.h>
+#include <WiFiManager.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266HTTPUpdateServer.h>
 
-#ifndef STASSID
-#define STASSID "your-ssid"
-#define STAPSK  "your-password"
-#endif
-
 const char* host = "Earthworm";
-const char* ssid = STASSID;
-const char* password = STAPSK;
 
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdater;
@@ -21,24 +17,19 @@ void setup(void) {
   Serial.begin(115200);
   Serial.println();
   Serial.println("Booting Sketch...");
-  WiFi.mode(WIFI_AP_STA);
-  WiFi.begin(ssid, password);
-
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    WiFi.begin(ssid, password);
-    Serial.println("WiFi failed, retrying.");
-  }
-
+  WiFiManager wifiManager;
+  Serial.println("Starting WiFi OR Starting WiFi Config Manager...");
+  wifiManager.autoConnect("ConfigEarthworm");
+  Serial.println("Starting mDNS Service...");
   MDNS.begin(host);
-
   httpUpdater.setup(&httpServer);
   httpServer.begin();
-
   MDNS.addService("http", "tcp", 80);
-  Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\n", host);
+  Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\nThis Service allows espota to send firmware over WiFi\n\n\n", host);
 }
 
 void loop(void) {
+  Serial.println("In main loop, doing main loop stuff...");
   httpServer.handleClient();
   MDNS.update();
 }
