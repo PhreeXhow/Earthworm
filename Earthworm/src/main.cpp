@@ -11,25 +11,29 @@
 const char* host = "Earthworm";
 
 const int pin_ser_dat = D6;
-const int pin_ser_clk = D0;
-const int pin_reg_latch = D7;
+const int pin_ser_clk = D7;
+const int pin_reg_latch = D5;
 const int pin_mstr_rst = D8;
 
-volatile byte controlStatus = 0;
+volatile uint8_t controlStatus = 0;
 volatile unsigned long millisfrom = 0;
 
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdater;
 
-void sendToShiftRegister(unsigned char value) {  
-  SPI.beginTransaction(SPISettings(14000000, MSBFIRST, SPI_MODE0));
-  SPI.write(value);
-  SPI.endTransaction();
+void sendToShiftRegister(uint8_t value) {  
+  Serial.print("Requested to send value ");
+  Serial.print(value);
+  Serial.println(" to Shift Register.");
+  shiftOut(pin_ser_dat,pin_ser_clk, MSBFIRST, value);
+  digitalWrite(pin_reg_latch, HIGH);
+  delay(20);
+  digitalWrite(pin_reg_latch, LOW);
 }
 
 void setup(void) {
   pinMode(pin_mstr_rst,OUTPUT);
-  digitalWrite(pin_mstr_rst,LOW); 
+  digitalWrite(pin_mstr_rst,LOW);
   Serial.begin(115200);
   Serial.println("Booting Sketch...");
   WiFiManager wifiManager;
@@ -42,6 +46,7 @@ void setup(void) {
   MDNS.addService("http", "tcp", 80);
   Serial.printf("HTTPUpdateServer ready! Open http://%s.local/update in your browser\n\n\n", host);
   sendToShiftRegister(random(255));
+  digitalWrite(pin_mstr_rst, HIGH);
   millisfrom = millis();
 }
 
