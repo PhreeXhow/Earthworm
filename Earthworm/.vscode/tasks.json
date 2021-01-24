@@ -1,0 +1,52 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "PlatformIO",
+			"task": "Build (d1_mini_pro)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"label": "PlatformIO: Build (d1_mini_pro)"
+		},
+		{
+			"type": "PlatformIO",
+			"task": "Verbose Build (d1_mini_pro)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"label": "PlatformIO: Verbose Build (d1_mini_pro)",
+			"group": "build"
+		},
+		{
+			"type": "PlatformIO",
+			"task": "Upload (d1_mini_pro)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"label": "PlatformIO: Upload (d1_mini_pro)"
+		},
+		{
+			"type": "PlatformIO",
+			"task": "Build Filesystem Image (d1_mini_pro)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"group": "build",
+			"label": "PlatformIO: Build Filesystem Image (d1_mini_pro)"
+		},
+		{
+			"type": "PlatformIO",
+			"task": "Remote Upload (d1_mini_pro)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"label": "PlatformIO: Remote Upload (d1_mini_pro)",
+			"group": "build"
+		}
+	]
+}
